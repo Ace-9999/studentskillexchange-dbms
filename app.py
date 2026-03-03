@@ -7,11 +7,13 @@ app = Flask(__name__)
 # DATABASE CONNECTION
 # =========================
 
+import os
+
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="YOUR_PASSWORD",   # CHANGE THIS
-    database="skill_exchange"
+    host=os.environ.get("DB_HOST"),
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    database=os.environ.get("DB_NAME")
 )
 
 cursor = db.cursor(dictionary=True)
