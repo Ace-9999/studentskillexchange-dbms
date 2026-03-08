@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wallet</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/add_collab_page">Collaboration</a>
+<a href="/match_page">Find Matches</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Check Wallet</h2>
+
+<form onsubmit="checkWallet(event)">
+
+<label>Student ID</label>
+<input type="number" id="wallet_id" required>
+
+<button type="submit">Check Points</button>
+
+</form>
+
+<p id="wallet_result"></p>
+
+</div>
+
+<script>
+
+function checkWallet(e)
+{
+e.preventDefault();
+
+let id = document.getElementById("wallet_id").value;
+
+fetch(`/wallet/${id}`)
+.then(res => res.json())
+.then(data => {
+
+document.getElementById("wallet_result").innerText =
+"Points Balance: " + data.points_balance;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

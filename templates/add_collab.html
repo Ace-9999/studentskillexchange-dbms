@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Collaboration Request</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/match_page">Find Matches</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Send Collaboration Request</h2>
+
+<form action="/add_collab" method="POST">
+
+<label>Sender ID</label>
+<input type="number" name="sender_id" required>
+
+<label>Receiver ID</label>
+<input type="number" name="receiver_id" required>
+
+<label>Offer ID</label>
+<input type="number" name="offer_id" required>
+
+<label>Request ID</label>
+<input type="number" name="request_id" required>
+
+<button type="submit">Send Request</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

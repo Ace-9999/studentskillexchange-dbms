@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Find Matches</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/add_collab_page">Collaboration</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Find Skill Matches</h2>
+
+<form onsubmit="findMatches(event)">
+
+<label>Student ID</label>
+<input type="number" id="match_id" required>
+
+<button type="submit">Search</button>
+
+</form>
+
+<ul id="match_result"></ul>
+
+</div>
+
+<script>
+
+function findMatches(e)
+{
+e.preventDefault();
+
+let id = document.getElementById("match_id").value;
+
+fetch(`/match/${id}`)
+.then(res => res.json())
+.then(data => {
+
+let list = document.getElementById("match_result");
+
+list.innerHTML = "";
+
+data.forEach(match => {
+
+let li = document.createElement("li");
+
+li.innerText =
+match.name +
+" offers " +
+match.skill_name +
+" (" + match.proficiency_level + ")" +
+" - " + match.hourly_points_value + " pts/hr";
+
+list.appendChild(li);
+
+});
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

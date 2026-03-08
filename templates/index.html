@@ -1,135 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Skill Exchange</title>
-    <link rel="stylesheet" href="/static/style.css">
+<title>Skill Exchange</title>
+<link rel="stylesheet" href="/static/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="container">
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
 
-    <h1>Student Skill Exchange</h1>
-
-    <div class="grid">
-
-        <div class="card">
-            <h2>Add Skill Request</h2>
-            <form action="/add_skill_request" method="POST">
-                <input type="number" name="student_id" placeholder="Student ID" required>
-                <input type="number" name="skill_id" placeholder="Skill ID" required>
-                <input type="text" name="desired_level" placeholder="Desired Level" required>
-                <input type="text" name="urgency_level" placeholder="Urgency Level" required>
-                <input type="text" name="preferred_mode" placeholder="Preferred Mode" required>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-
-        <div class="card">
-            <h2>Send Collaboration Request</h2>
-            <form action="/add_collab" method="POST">
-                <input type="number" name="sender_id" placeholder="Sender ID" required>
-                <input type="number" name="receiver_id" placeholder="Receiver ID" required>
-                <input type="number" name="offer_id" placeholder="Offer ID" required>
-                <input type="number" name="request_id" placeholder="Request ID" required>
-                <button type="submit">Send</button>
-            </form>
-        </div>
-
-        <div class="card">
-            <h2>Find Skill Matches</h2>
-            <form onsubmit="findMatches(event)">
-                <input type="number" id="match_id" placeholder="Student ID" required>
-                <button type="submit">Find Matches</button>
-            </form>
-            <ul id="match_result"></ul>
-        </div>
-
-        <div class="card">
-            <h2>Check Wallet</h2>
-            <form onsubmit="checkWallet(event)">
-                <input type="number" id="wallet_id" placeholder="Student ID" required>
-                <button type="submit">Check Points</button>
-            </form>
-            <p id="wallet_result"></p>
-        </div>
-
-        <div class="card">
-            <h2>View Certifications</h2>
-            <form onsubmit="viewCerts(event)">
-                <input type="number" id="cert_id" placeholder="Student ID" required>
-                <button type="submit">View</button>
-            </form>
-            <ul id="cert_result"></ul>
-        </div>
-
-    </div>
-
+<div class="nav-links">
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/add_collab_page">Collaboration</a>
+<a href="/match_page">Find Matches</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
 </div>
 
-<script>
-function findMatches(e) {
-    e.preventDefault();
-    let id = document.getElementById("match_id").value;
-
-    fetch(`/match/${id}`)
-        .then(res => res.json())
-        .then(data => {
-            let list = document.getElementById("match_result");
-            list.innerHTML = "";
-
-            if (data.length === 0) {
-                list.innerHTML = "<li>No matches found.</li>";
-                return;
-            }
-
-            data.forEach(match => {
-                let li = document.createElement("li");
-                li.innerText =
-                    match.name + " offers " +
-                    match.skill_name + " (" +
-                    match.proficiency_level + ") - " +
-                    match.hourly_points_value + " pts/hr";
-                list.appendChild(li);
-            });
-        });
-}
-
-function checkWallet(e) {
-    e.preventDefault();
-    let id = document.getElementById("wallet_id").value;
-
-    fetch(`/wallet/${id}`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("wallet_result").innerText =
-                "Points Balance: " + data.points_balance;
-        });
-}
-
-function viewCerts(e) {
-    e.preventDefault();
-    let id = document.getElementById("cert_id").value;
-
-    fetch(`/certifications/${id}`)
-        .then(res => res.json())
-        .then(data => {
-            let list = document.getElementById("cert_result");
-            list.innerHTML = "";
-
-            if (data.length === 0) {
-                list.innerHTML = "<li>No certifications yet.</li>";
-                return;
-            }
-
-            data.forEach(cert => {
-                let li = document.createElement("li");
-                li.innerText =
-                    cert.skill_name + " - " + cert.certification_level;
-                list.appendChild(li);
-            });
-        });
-}
-</script>
+<div class="container">
+<h1>Welcome to Skill Exchange</h1>
+<p>Connect with students to teach and learn new skills.</p>
+</div>
 
 </body>
 </html>

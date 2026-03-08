@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Skill Request</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_collab_page">Collaboration</a>
+<a href="/match_page">Find Matches</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Add Skill Request</h2>
+
+<form action="/add_skill_request" method="POST">
+
+<label>Student ID</label>
+<input type="number" name="student_id" required>
+
+<label>Skill ID</label>
+<input type="number" name="skill_id" required>
+
+<label>Desired Level</label>
+<select name="desired_level">
+<option>Beginner</option>
+<option>Intermediate</option>
+<option>Advanced</option>
+</select>
+
+<label>Urgency Level</label>
+<select name="urgency_level">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+
+<label>Preferred Mode</label>
+<select name="preferred_mode">
+<option>Online</option>
+<option>Offline</option>
+<option>Hybrid</option>
+</select>
+
+<button type="submit">Submit</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

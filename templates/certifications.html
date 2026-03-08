@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Certifications</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/add_collab_page">Collaboration</a>
+<a href="/match_page">Find Matches</a>
+<a href="/wallet_page">Wallet</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>View Certifications</h2>
+
+<form onsubmit="viewCerts(event)">
+
+<label>Student ID</label>
+<input type="number" id="cert_id" required>
+
+<button type="submit">View</button>
+
+</form>
+
+<ul id="cert_result"></ul>
+
+</div>
+
+<script>
+
+function viewCerts(e)
+{
+e.preventDefault();
+
+let id = document.getElementById("cert_id").value;
+
+fetch(`/certifications/${id}`)
+.then(res => res.json())
+.then(data => {
+
+let list = document.getElementById("cert_result");
+list.innerHTML = "";
+
+data.forEach(cert => {
+
+let li = document.createElement("li");
+
+li.innerText =
+cert.skill_name +
+" - " +
+cert.certification_level;
+
+list.appendChild(li);
+
+});
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
