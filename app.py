@@ -9,11 +9,11 @@ app = Flask(__name__)
 # =========================
 
 db = mysql.connector.connect(
-    host=os.environ.get("DB_HOST"),
-    port=os.environ.get("DB_PORT"),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME")
+    host=os.environ.get("MYSQLHOST"),
+    port=int(os.environ.get("MYSQLPORT")),
+    user=os.environ.get("MYSQLUSER"),
+    password=os.environ.get("MYSQLPASSWORD"),
+    database=os.environ.get("MYSQLDATABASE")
 )
 
 cursor = db.cursor(dictionary=True)
