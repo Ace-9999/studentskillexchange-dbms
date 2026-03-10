@@ -97,33 +97,66 @@ def add_skill_request():
 
 @app.route("/add_collab", methods=["POST"])
 def add_collab():
-
     try:
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
         data = request.form
 
+        sender = data["sender_id"]
+        receiver = data["receiver_id"]
+        offer_id = data["offer_id"]
+        request_id = data["request_id"]
+
+        # Insert collaboration request
         sql = """
         INSERT INTO Collaboration_Request
         (sender_id, receiver_id, offer_id, request_id, request_date)
         VALUES (%s,%s,%s,%s,CURDATE())
         """
 
-        values = (
-            data["sender_id"],
-            data["receiver_id"],
-            data["offer_id"],
-            data["request_id"]
-        )
+        cursor.execute(sql, (sender, receiver, offer_id, request_id))
 
-        cursor.execute(sql, values)
+
+        # Get cost of the skill (points/hr)
+        cost_query = """
+        SELECT hourly_points_value
+        FROM Skill_Offer
+        WHERE offer_id = %s
+        """
+
+        cursor.execute(cost_query, (offer_id,))
+        result = cursor.fetchone()
+
+        cost = result["hourly_points_value"]
+
+
+        # Deduct points from learner
+        deduct_query = """
+        UPDATE Wallet
+        SET points_balance = points_balance - %s
+        WHERE student_id = %s
+        """
+
+        cursor.execute(deduct_query, (cost, sender))
+
+
+        # Add points to teacher
+        add_query = """
+        UPDATE Wallet
+        SET points_balance = points_balance + %s
+        WHERE student_id = %s
+        """
+
+        cursor.execute(add_query, (cost, receiver))
+
+
         db.commit()
 
         cursor.close()
         db.close()
 
-        return "Collaboration Request Sent Successfully!"
+        return "Collaboration Request Sent and Wallet Updated!"
 
     except Exception as e:
         return str(e)
