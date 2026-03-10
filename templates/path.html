@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Skill Path</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/demand_page">Skill Demand</a>
+<a href="/path_page">Skill Paths</a>
+<a href="/wallet_page">Wallet</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Recommended Skills</h2>
+
+<label>Student ID</label>
+<input type="number" id="student_id">
+
+<button onclick="getPaths()">Get Recommendations</button>
+
+<ul id="path_list"></ul>
+
+</div>
+
+<script>
+
+function getPaths(){
+
+let id = document.getElementById("student_id").value;
+
+fetch("/skill_path/" + id)
+.then(res => res.json())
+.then(data => {
+
+let list = document.getElementById("path_list");
+
+list.innerHTML = "";
+
+data.forEach(skill => {
+
+let li = document.createElement("li");
+
+li.innerText = skill.skill_name;
+
+list.appendChild(li);
+
+});
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

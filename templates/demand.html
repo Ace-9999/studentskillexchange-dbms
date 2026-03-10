@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Skill Demand</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/demand_page">Skill Demand</a>
+<a href="/path_page">Skill Paths</a>
+<a href="/wallet_page">Wallet</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Skill Demand Prediction</h2>
+
+<button onclick="loadDemand()">Show Demand</button>
+
+<ul id="demand_list"></ul>
+
+</div>
+
+<script>
+
+function loadDemand(){
+
+fetch("/skill_demand")
+.then(res => res.json())
+.then(data => {
+
+let list = document.getElementById("demand_list");
+
+list.innerHTML = "";
+
+data.forEach(skill => {
+
+let li = document.createElement("li");
+
+li.innerText =
+skill.skill_name + " → " + skill.demand + " requests";
+
+list.appendChild(li);
+
+});
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

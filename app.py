@@ -285,7 +285,59 @@ def add_collab():
 
     except Exception as e:
         return str(e)
+    
+@app.route("/path_page")
+def path_page():
+    return render_template("path.html")
+    
+@app.route("/skill_path/<int:student_id>")
+def skill_path(student_id):
 
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    query = """
+    SELECT DISTINCT s2.skill_name
+    FROM Skill_Progress sp
+    JOIN Skill_Path p ON sp.skill_id = p.skill_id
+    JOIN Skill s2 ON p.next_skill_id = s2.skill_id
+    WHERE sp.student_id = %s
+    """
+
+    cursor.execute(query,(student_id,))
+    result = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return jsonify(result)
+    
+@app.route("/demand_page")
+def demand_page():
+    return render_template("demand.html")
+
+
+@app.route("/skill_demand")
+def skill_demand():
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    query = """
+    SELECT sk.skill_name, COUNT(sr.request_id) AS demand
+    FROM Skill_Request sr
+    JOIN Skill sk ON sr.skill_id = sk.skill_id
+    GROUP BY sr.skill_id
+    ORDER BY demand DESC
+    """
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return jsonify(result)
 
 # =========================
 # MATCHING ENGINE
