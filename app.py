@@ -51,6 +51,128 @@ def wallet_page():
 def cert_page():
     return render_template("certifications.html")
 
+@app.route("/bid_page")
+def bid_page():
+    return render_template("bid.html")
+
+@app.route("/session_page")
+def session_page():
+    return render_template("session.html")
+
+@app.route("/rating_page")
+def rating_page():
+    return render_template("rating.html")
+
+@app.route("/schedule_session", methods=["POST"])
+def schedule_session():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.form
+
+    sql = """
+    INSERT INTO Session
+    (collab_id, session_date, duration_hours, session_status)
+    VALUES (%s,%s,%s,'Scheduled')
+    """
+
+    cursor.execute(sql, (
+        data["collab_id"],
+        data["date"],
+        data["duration"]
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return "Session scheduled!"
+
+@app.route("/rate_teacher", methods=["POST"])
+def rate_teacher():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.form
+
+    sql = """
+    INSERT INTO Skill_Rating
+    (session_id, reviewer_id, rating, review)
+    VALUES (%s,%s,%s,%s)
+    """
+
+    cursor.execute(sql, (
+        data["session_id"],
+        data["reviewer_id"],
+        data["rating"],
+        data["review"]
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return "Rating submitted!"
+
+@app.route("/update_progress", methods=["POST"])
+def update_progress():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.form
+
+    sql = """
+    INSERT INTO Skill_Progress
+    (student_id, skill_id, progress_percent, last_updated)
+    VALUES (%s,%s,%s,CURDATE())
+    """
+
+    cursor.execute(sql, (
+        data["student_id"],
+        data["skill_id"],
+        data["progress"]
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return "Progress updated!"
+
+@app.route("/place_bid", methods=["POST"])
+def place_bid():
+
+    db = get_db()
+    cursor = db.cursor()
+
+    data = request.form
+
+    sql = """
+    INSERT INTO Skill_Bid
+    (request_id, teacher_id, proposed_points, message)
+    VALUES (%s,%s,%s,%s)
+    """
+
+    cursor.execute(sql, (
+        data["request_id"],
+        data["teacher_id"],
+        data["points"],
+        data["message"]
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return "Bid submitted!"
+
 
 # =========================
 # ADD SKILL REQUEST
@@ -128,7 +250,10 @@ def add_collab():
         cursor.execute(cost_query, (offer_id,))
         result = cursor.fetchone()
 
-        cost = result["hourly_points_value"]
+        if result:
+            cost = result["hourly_points_value"]
+        else:
+            return "Invalid offer ID"
 
 
         # Deduct points from learner

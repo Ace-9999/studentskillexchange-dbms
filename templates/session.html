@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rate Teacher</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/match_page">Find Matches</a>
+<a href="/bid_page">Place Bid</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Rate Teacher</h2>
+
+<form action="/rate_teacher" method="POST">
+
+<label>Session ID</label>
+<input type="number" name="session_id" required>
+
+<label>Reviewer ID</label>
+<input type="number" name="reviewer_id" required>
+
+<label>Rating</label>
+<select name="rating">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+</select>
+
+<label>Review</label>
+<input type="text" name="review">
+
+<button type="submit">Submit Rating</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

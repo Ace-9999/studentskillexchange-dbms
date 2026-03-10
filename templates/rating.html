@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Schedule Session</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">Skill Exchange</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/add_skill_request_page">Skill Request</a>
+<a href="/match_page">Find Matches</a>
+<a href="/bid_page">Place Bid</a>
+<a href="/wallet_page">Wallet</a>
+<a href="/certifications_page">Certifications</a>
+</div>
+</div>
+
+<div class="form-container">
+
+<h2>Schedule Learning Session</h2>
+
+<form action="/schedule_session" method="POST">
+
+<label>Collaboration ID</label>
+<input type="number" name="collab_id" required>
+
+<label>Session Date</label>
+<input type="date" name="date" required>
+
+<label>Duration (hours)</label>
+<input type="number" name="duration" required>
+
+<button type="submit">Schedule Session</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
