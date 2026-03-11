@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Rate Teacher</title>
+<title>Schedule Session</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -23,29 +23,20 @@
 
 <div class="form-container">
 
-<h2>Rate Teacher</h2>
+<h2>Schedule Learning Session</h2>
 
-<form action="/rate_teacher" method="POST">
+<form action="/schedule_session" method="POST">
 
-<label>Session ID</label>
-<input type="number" name="session_id" required>
+<label>Collaboration ID</label>
+<input type="number" name="collab_id" required>
 
-<label>Reviewer ID</label>
-<input type="number" name="reviewer_id" required>
+<label>Session Date</label>
+<input type="date" name="date" required>
 
-<label>Rating</label>
-<select name="rating">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-</select>
+<label>Duration (hours)</label>
+<input type="number" name="duration" required>
 
-<label>Review</label>
-<input type="text" name="review">
-
-<button type="submit">Submit Rating</button>
+<button type="submit">Schedule Session</button>
 
 </form>
 
