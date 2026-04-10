@@ -1,44 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Skill Exchange</title>
-<link rel="stylesheet" href="/static/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Exchange — Peer Learning Platform</title>
+  <meta name="description" content="Connect with students to teach and learn new skills through a points-based exchange platform.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    SkillExchange
+  </div>
+  <div class="nav-links">
+    <a href="/" class="active">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="logo">Skill Exchange</div>
+<!-- ── Hero ── -->
+<section class="hero">
+  <img class="hero-bg-image" src="/static/hero_banner.png" alt="Hero background">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span>✦</span> Peer-to-Peer Learning Network
+    </div>
+    <h1>
+      Trade Skills.<br>
+      <span class="gradient-text">Grow Together.</span>
+    </h1>
+    <p>
+      A student-powered platform where knowledge is currency.
+      Teach what you know, learn what you don't — earn points and unlock certifications.
+    </p>
+    <div class="hero-actions">
+      <a href="/add_skill_request_page" class="btn btn-primary btn-lg">🎯 Request a Skill</a>
+      <a href="/match_page" class="btn btn-outline btn-lg">🔍 Find Matches</a>
+    </div>
+  </div>
+</section>
 
-<div class="nav-links">
+<!-- ── Feature Grid ── -->
+<section>
+  <div style="text-align:center; padding: 48px 48px 0;">
+    <h2 style="font-family:'Outfit',sans-serif; font-size:28px; font-weight:800; letter-spacing:-0.5px;">
+      Everything you need to <span style="background:linear-gradient(135deg,#f5c800,#ffe566);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">learn & teach</span>
+    </h2>
+    <p style="color:var(--text-muted); margin-top:10px; font-size:15px;">Nine powerful features to supercharge your skill journey.</p>
+  </div>
 
-<a href="/">Home</a>
+  <div class="feature-grid">
 
-<a href="/add_skill_request_page">Skill Request</a>
+    <a href="/add_skill_request_page" class="feature-card">
+      <span class="feature-icon">🎯</span>
+      <h3>Skill Requests</h3>
+      <p>Post what you want to learn with urgency and mode preference.</p>
+    </a>
 
-<a href="/match_page">Find Matches</a>
+    <a href="/match_page" class="feature-card">
+      <span class="feature-icon">🤝</span>
+      <h3>Smart Matching</h3>
+      <p>Our engine pairs you with the perfect teacher instantly.</p>
+    </a>
 
-<a href="/bid_page">Place Bid</a>
+    <a href="/add_collab_page" class="feature-card">
+      <span class="feature-icon">🔗</span>
+      <h3>Collaboration</h3>
+      <p>Send collaboration requests and auto-settle points in real time.</p>
+    </a>
 
-<a href="/session_page">Sessions</a>
+    <a href="/bid_page" class="feature-card">
+      <span class="feature-icon">💰</span>
+      <h3>Skill Bidding</h3>
+      <p>Teachers bid on open requests with custom point proposals.</p>
+    </a>
 
-<a href="/rating_page">Rate Teacher</a>
 
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
+    <a href="/rating_page" class="feature-card">
+      <span class="feature-icon">⭐</span>
+      <h3>Rate Teachers</h3>
+      <p>Leave honest reviews to build community trust and quality.</p>
+    </a>
 
-</div>
+    <a href="/wallet_page" class="feature-card">
+      <span class="feature-icon">👛</span>
+      <h3>Points Wallet</h3>
+      <p>Track your balance — earn by teaching, spend by learning.</p>
+    </a>
 
-</div>
+    <a href="/demand_page" class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>Skill Demand</h3>
+      <p>See which skills are trending across the platform right now.</p>
+    </a>
 
-<div class="container">
-<h1>Welcome to Skill Exchange</h1>
-<p>Connect with students to teach and learn new skills.</p>
-</div>
+    <a href="/path_page" class="feature-card">
+      <span class="feature-icon">🗺️</span>
+      <h3>Skill Paths</h3>
+      <p>Get AI-curated next-skill recommendations based on your progress.</p>
+    </a>
+
+    <a href="/certifications_page" class="feature-card">
+      <span class="feature-icon">🏅</span>
+      <h3>Certifications</h3>
+      <p>Earn verified skill badges to showcase your learning milestones.</p>
+    </a>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="text-align:center; padding:32px; color:var(--text-muted); font-size:13px; border-top:1px solid var(--glass-border); margin-top:40px;">
+  © 2025 SkillExchange · Built for the DBMS Course Project
+</footer>
+
+<div id="toast"></div>
 
 </body>
 </html>

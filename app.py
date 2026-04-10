@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (for local development)
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -10,11 +14,11 @@ app = Flask(__name__)
 
 def get_db():
     return mysql.connector.connect(
-        host=os.environ.get("MYSQLHOST"),
-        port=int(os.environ.get("MYSQLPORT")),
-        user=os.environ.get("MYSQLUSER"),
-        password=os.environ.get("MYSQLPASSWORD"),
-        database=os.environ.get("MYSQLDATABASE")
+        host=os.environ.get("MYSQLHOST", "localhost"),
+        port=int(os.environ.get("MYSQLPORT", 3306)),
+        user=os.environ.get("MYSQLUSER", "root"),
+        password=os.environ.get("MYSQLPASSWORD", ""),
+        database=os.environ.get("MYSQLDATABASE", "studentskillexchange")
     )
 
 
@@ -240,20 +244,22 @@ def add_collab():
         cursor.execute(sql, (sender, receiver, offer_id, request_id))
 
 
-        # Get cost of the skill (points/hr)
+        # Get cost + skill_id from the offer/request
         cost_query = """
-        SELECT hourly_points_value
-        FROM Skill_Offer
-        WHERE offer_id = %s
+        SELECT so.hourly_points_value, sr.skill_id
+        FROM Skill_Offer so
+        JOIN Skill_Request sr ON sr.request_id = %s
+        WHERE so.offer_id = %s
         """
 
-        cursor.execute(cost_query, (offer_id,))
+        cursor.execute(cost_query, (request_id, offer_id))
         result = cursor.fetchone()
 
         if result:
             cost = result["hourly_points_value"]
+            skill_id = result["skill_id"]
         else:
-            return "Invalid offer ID"
+            return "Invalid offer ID or request ID"
 
 
         # Deduct points from learner
@@ -274,6 +280,18 @@ def add_collab():
         """
 
         cursor.execute(add_query, (cost, receiver))
+
+
+        # Auto-update learner's skill progress (upsert 25% starting progress)
+        progress_query = """
+        INSERT INTO Skill_Progress (student_id, skill_id, progress_percent, last_updated)
+        VALUES (%s, %s, 25, CURDATE())
+        ON DUPLICATE KEY UPDATE
+            progress_percent = LEAST(progress_percent + 25, 100),
+            last_updated = CURDATE()
+        """
+
+        cursor.execute(progress_query, (sender, skill_id))
 
 
         db.commit()
@@ -297,7 +315,7 @@ def skill_path(student_id):
     cursor = db.cursor(dictionary=True)
 
     query = """
-    SELECT DISTINCT s2.skill_name
+    SELECT DISTINCT s2.skill_id, s2.skill_name
     FROM Skill_Progress sp
     JOIN Skill_Path p ON sp.skill_id = p.skill_id
     JOIN Skill s2 ON p.next_skill_id = s2.skill_id
@@ -352,6 +370,7 @@ def match_skills(student_id):
 
         sql = """
         SELECT
+            sr.request_id,
             so.offer_id,
             s2.student_id,
             s2.name,
@@ -444,4 +463,4 @@ def certifications(student_id):
 # =========================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5000)), debug=True)

@@ -1,61 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Skill Demand</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Demand — SkillExchange</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a><a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a><a href="/wallet_page">Wallet</a>
+    <a href="/demand_page" class="active">Skill Demand</a><a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="navbar">
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-<a href="/">Home</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/wallet_page">Wallet</a>
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">📊 Market Intelligence</div>
+    <h1>Skill <span>Demand Trends</span></h1>
+    <p>See which skills are most requested across the platform. Use this data to price your bids competitively or decide what to learn next.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/match_banner.png" alt="Demand Chart">
+  </div>
 </div>
+
+<div class="page-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon blue">📊</div>
+      <div><h2>Most In-Demand Skills</h2><p id="demand-subtitle">Click to load live data</p></div>
+      <button onclick="loadDemand()" class="btn btn-primary" id="demandBtn" style="margin-left:auto;">📊 Load Data</button>
+    </div>
+    <div class="card-body">
+      <div id="demand-empty" class="empty-state">
+        <div class="empty-icon">📈</div>
+        <p>Click <strong>Load Data</strong> to fetch the latest skill demand rankings.</p>
+      </div>
+      <div id="demand_list" class="demand-bar-wrap" style="display:none;"></div>
+    </div>
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Skill Demand Prediction</h2>
-
-<button onclick="loadDemand()">Show Demand</button>
-
-<ul id="demand_list"></ul>
-
-</div>
-
+<div id="toast"></div>
 <script>
+function loadDemand() {
+  const btn = document.getElementById('demandBtn');
+  btn.textContent = '⏳ Loading...';
+  btn.disabled = true;
 
-function loadDemand(){
+  fetch('/skill_demand')
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = '🔄 Refresh';
+      btn.disabled = false;
 
-fetch("/skill_demand")
-.then(res => res.json())
-.then(data => {
+      const container = document.getElementById('demand_list');
+      const empty = document.getElementById('demand-empty');
+      const sub = document.getElementById('demand-subtitle');
+      container.innerHTML = '';
 
-let list = document.getElementById("demand_list");
+      if (!data.length) {
+        sub.textContent = 'No data available';
+        return;
+      }
 
-list.innerHTML = "";
+      empty.style.display = 'none';
+      container.style.display = 'flex';
+      sub.textContent = `${data.length} skills ranked by request count`;
 
-data.forEach(skill => {
+      const max = data[0].demand;
+      const colors = [
+        'linear-gradient(90deg,#f5c842,#ffdeaa)',
+        'linear-gradient(90deg,#c0c0c0,#e8e8e8)',
+        'linear-gradient(90deg,#cd7f32,#e8a87c)',
+      ];
 
-let li = document.createElement("li");
+      data.forEach((skill, i) => {
+        const pct = Math.max(4, Math.round((skill.demand / max) * 100));
+        const color = i < 3 ? colors[i] : 'linear-gradient(90deg,#c8a000,#f5c800)';
+        const rankLabel = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
 
-li.innerText =
-skill.skill_name + " → " + skill.demand + " requests";
+        const div = document.createElement('div');
+        div.className = 'demand-bar-item';
+        div.style.animationDelay = `${i * 0.05}s`;
+        div.innerHTML = `
+          <span style="min-width:28px;text-align:center;font-size:14px;">${rankLabel}</span>
+          <span class="bar-label">${skill.skill_name}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:0%;background:${color};" data-width="${pct}"></div>
+          </div>
+          <span class="bar-count">${skill.demand} req</span>
+        `;
+        container.appendChild(div);
+      });
 
-list.appendChild(li);
-
-});
-
-});
-
+      // Animate bars
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+      });
+    })
+    .catch(() => { btn.textContent = '📊 Load Data'; btn.disabled = false; });
 }
-
 </script>
-
 </body>
 </html>

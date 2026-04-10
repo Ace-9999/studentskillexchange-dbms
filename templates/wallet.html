@@ -1,76 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Wallet</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet — SkillExchange</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a><a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a><a href="/wallet_page" class="active">Wallet</a>
+    <a href="/demand_page">Skill Demand</a><a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="navbar">
-
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">👛 Points Economy</div>
+    <h1>Your <span>Skill Wallet</span></h1>
+    <p>Points are the currency of SkillExchange. Earn by teaching, spend by learning.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/wallet_banner.png" alt="Wallet Illustration">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="max-width:560px; margin:0 auto;">
+
+    <div class="stats-strip" style="grid-template-columns:repeat(3,1fr); margin-bottom:28px;">
+      <div class="stat-card"><div class="stat-icon">📤</div><div class="stat-value" style="font-size:18px;">Spend</div><div class="stat-label">To learn</div></div>
+      <div class="stat-card"><div class="stat-icon">📥</div><div class="stat-value" style="font-size:18px;">Earn</div><div class="stat-label">By teaching</div></div>
+      <div class="stat-card"><div class="stat-icon">🏅</div><div class="stat-value" style="font-size:18px;">Unlock</div><div class="stat-label">Certifications</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon gold">👛</div>
+        <div><h2>Check Balance</h2><p>Enter your Student ID</p></div>
+      </div>
+      <div class="card-body">
+        <form onsubmit="checkWallet(event)">
+          <div class="form-group">
+            <label><span class="label-icon">🆔</span> Student ID</label>
+            <input type="number" id="wallet_id" placeholder="e.g. 42" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="walletBtn">👛 Check My Balance</button>
+        </form>
+
+        <div class="wallet-balance-display" id="wallet_result">
+          <div class="balance-icon">💰</div>
+          <div class="balance-value" id="balance-number">0</div>
+          <div class="balance-label">Skill Points Available</div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:16px;">
+            <a href="/add_collab_page" class="btn btn-outline" style="flex:1;font-size:13px;">🔗 Collaborate</a>
+            <a href="/add_skill_request_page" class="btn btn-primary" style="flex:1;font-size:13px;">🎯 Learn a Skill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(245,200,0,0.06);border:1px solid rgba(245,200,0,0.20);border-radius:var(--radius-md);padding:18px 22px;margin-top:20px;font-size:13px;color:var(--text-muted);line-height:1.7;">
+      <strong style="color:#f5c800;">📌 How points transfer:</strong><br>
+      When you send a collaboration request, the skill's hourly rate is immediately deducted from your balance and credited to the teacher's wallet.
+    </div>
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Check Wallet</h2>
-
-<form onsubmit="checkWallet(event)">
-
-<label>Student ID</label>
-<input type="number" id="wallet_id" required>
-
-<button type="submit">Check Points</button>
-
-</form>
-
-<p id="wallet_result"></p>
-
-</div>
-
+<div id="toast"></div>
 <script>
-
-function checkWallet(e)
-{
-e.preventDefault();
-
-let id = document.getElementById("wallet_id").value;
-
-fetch(`/wallet/${id}`)
-.then(res => res.json())
-.then(data => {
-
-document.getElementById("wallet_result").innerText =
-"Points Balance: " + data.points_balance;
-
-});
-
+function checkWallet(e) {
+  e.preventDefault();
+  const id = document.getElementById('wallet_id').value;
+  const btn = document.getElementById('walletBtn');
+  btn.textContent = '⏳ Fetching...';
+  btn.disabled = true;
+  fetch(`/wallet/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = '👛 Check My Balance';
+      btn.disabled = false;
+      if (data.error) { showToast('❌ ' + data.error, 'error'); return; }
+      document.getElementById('balance-number').textContent = data.points_balance ?? 0;
+      document.getElementById('wallet_result').classList.add('visible');
+    })
+    .catch(() => { btn.textContent = '👛 Check My Balance'; btn.disabled = false; showToast('❌ Failed', 'error'); });
 }
-
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `show ${type}`;
+  setTimeout(() => t.className = '', 3000);
+}
 </script>
-
 </body>
 </html>

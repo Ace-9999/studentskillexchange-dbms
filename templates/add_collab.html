@@ -1,62 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Collaboration Request</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaboration Request — SkillExchange</title>
+  <meta name="description" content="Send a collaboration request and auto-transfer skill points.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page" class="active">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">🔗 Initiate Collaboration</div>
+    <h1>Send a <span>Collaboration Request</span></h1>
+    <p>Connect with a matched teacher. Points are automatically deducted from your wallet and credited to theirs the moment you submit.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/match_banner.png" alt="Collaboration Illustration">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid; grid-template-columns:1fr 1.6fr; gap:24px; align-items:start;">
+
+    <!-- Process Steps -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon violet">📋</div>
+        <div><h2>How It Works</h2><p>3 easy steps</p></div>
+      </div>
+      <div class="card-body">
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:32px; height:32px; background:rgba(245,200,0,0.15); border:1px solid rgba(245,200,0,0.4); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#f5c800; flex-shrink:0;">1</div>
+            <div>
+              <strong style="font-size:14px;">Find your match</strong>
+              <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px; line-height:1.5;">Go to "Find Matches" and note the Teacher ID and Offer ID.</p>
+            </div>
+          </div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:32px; height:32px; background:rgba(245,200,0,0.12); border:1px solid rgba(245,200,0,0.35); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#f5c800; flex-shrink:0;">2</div>
+            <div>
+              <strong style="font-size:14px;">Submit this form</strong>
+              <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px; line-height:1.5;">Fill in all IDs. Points transfer happens instantly upon submission.</p>
+            </div>
+          </div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:32px; height:32px; background:rgba(34,211,160,0.2); border:1px solid rgba(34,211,160,0.4); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--success); flex-shrink:0;">3</div>
+            <div>
+              <strong style="font-size:14px;">Rate your teacher</strong>
+              <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px; line-height:1.5;">After your session, head to Rate Teacher to leave a review and build trust.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="background:rgba(245,200,66,0.07); border:1px solid rgba(245,200,66,0.2); border-radius:10px; padding:14px; font-size:12.5px; color:var(--text-muted); line-height:1.6;">
+          <strong style="color:var(--accent-gold);">⚠️ Note on Points</strong><br>
+          Points are deducted from the sender (learner) and added to the receiver (teacher) based on the <em>hourly rate</em> set in the offer.
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon blue">🔗</div>
+        <div><h2>Collaboration Request</h2><p>All fields are required</p></div>
+      </div>
+      <div class="card-body">
+        <form action="/add_collab" method="POST">
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label><span class="label-icon">📤</span> Sender ID (You)</label>
+              <input type="number" name="sender_id" placeholder="Your Student ID" required>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">📥</span> Receiver ID (Teacher)</label>
+              <input type="number" name="receiver_id" placeholder="Teacher's Student ID" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label><span class="label-icon">🏷️</span> Offer ID</label>
+              <input type="number" name="offer_id" placeholder="From the match results" required>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">📝</span> Request ID</label>
+              <input type="number" name="request_id" placeholder="Your skill request ID" required>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg">
+            🔗 Send Collaboration Request &amp; Transfer Points
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Send Collaboration Request</h2>
-
-<form action="/add_collab" method="POST">
-
-<label>Sender ID</label>
-<input type="number" name="sender_id" required>
-
-<label>Receiver ID</label>
-<input type="number" name="receiver_id" required>
-
-<label>Offer ID</label>
-<input type="number" name="offer_id" required>
-
-<label>Request ID</label>
-<input type="number" name="request_id" required>
-
-<button type="submit">Send Request</button>
-
-</form>
-
-</div>
-
+<div id="toast"></div>
 </body>
 </html>

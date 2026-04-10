@@ -1,46 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Schedule Session</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Session — SkillExchange</title>
+  <meta name="description" content="Schedule your skill learning session with your matched teacher.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
-<div class="logo">Skill Exchange</div>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/session_page" class="active">Sessions</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="nav-links">
-<a href="/">Home</a>
-<a href="/add_skill_request_page">Skill Request</a>
-<a href="/match_page">Find Matches</a>
-<a href="/bid_page">Place Bid</a>
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a><a href="/certifications_page">Certifications</a>
-</div>
-</div>
-
-<div class="form-container">
-
-<h2>Schedule Learning Session</h2>
-
-<form action="/schedule_session" method="POST">
-
-<label>Collaboration ID</label>
-<input type="number" name="collab_id" required>
-
-<label>Session Date</label>
-<input type="date" name="date" required>
-
-<label>Duration (hours)</label>
-<input type="number" name="duration" required>
-
-<button type="submit">Schedule Session</button>
-
-</form>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">📅 Learning Sessions</div>
+    <h1>Schedule a <span>Learning Session</span></h1>
+    <p>Book your time with a teacher after an accepted collaboration. Define the date and duration — your session status will be set to <em>Scheduled</em>.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/hero_banner.png" alt="Session Scheduling">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:24px; align-items:start;">
+
+    <!-- Form -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon cyan">📅</div>
+        <div><h2>Schedule Session</h2><p>Set date and duration for your session</p></div>
+      </div>
+      <div class="card-body">
+        <form action="/schedule_session" method="POST">
+
+          <div class="form-group">
+            <label><span class="label-icon">🔗</span> Collaboration ID</label>
+            <input type="number" name="collab_id" placeholder="From your approved collaboration" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label><span class="label-icon">📆</span> Session Date</label>
+              <input type="date" name="date" required>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">⏱️</span> Duration (hours)</label>
+              <input type="number" name="duration" placeholder="e.g. 2" min="1" max="8" required>
+            </div>
+          </div>
+
+          <!-- Status preview -->
+          <div style="background:rgba(34,211,160,0.07); border:1px solid rgba(34,211,160,0.2); border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+            <span style="font-size:18px;">🟢</span>
+            <div>
+              <strong style="font-size:13px; color:var(--success);">Status will be set to: Scheduled</strong>
+              <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">You can update the status later after the session completes.</p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg">
+            📅 Schedule Session
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Info panel -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon green">🗓️</div>
+          <div><h2>Session Lifecycle</h2></div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:rgba(34,211,160,0.2); color:var(--success); padding:4px 12px; border-radius:100px; font-size:12px; font-weight:600;">Scheduled</span>
+              <span style="font-size:12.5px; color:var(--text-muted);">Awaiting session day</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:rgba(245,200,66,0.2); color:var(--accent-gold); padding:4px 12px; border-radius:100px; font-size:12px; font-weight:600;">In Progress</span>
+              <span style="font-size:12.5px; color:var(--text-muted);">Session is happening</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="background:rgba(245,200,0,0.15); color:#f5c800; padding:4px 12px; border-radius:100px; font-size:12px; font-weight:600;">Completed</span>
+              <span style="font-size:12.5px; color:var(--text-muted);">Session finished — rate now!</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <p style="font-size:12.5px; color:var(--text-muted); line-height:1.6;">
+            After a session is <strong>Completed</strong>, head to <a href="/rating_page" style="color:#f5c800; text-decoration:none;">Rate Teacher</a> to leave feedback.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body" style="text-align:center;">
+          <div style="font-size:40px; margin-bottom:10px;">⏰</div>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">Sessions can range from <strong style="color:var(--text-primary);">1 to 8 hours</strong>. Plan a realistic duration to make the most of your time.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
 </body>
 </html>

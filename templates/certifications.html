@@ -1,89 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Certifications</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certifications — SkillExchange</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a><a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a><a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a><a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page" class="active">Certifications</a>
+  </div>
+</nav>
 
-<div class="navbar">
-
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">🏅 Skill Credentials</div>
+    <h1>Your <span>Certifications</span></h1>
+    <p>Every skill you master earns a verified badge. Browse your earned certifications and showcase your learning journey.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/cert_banner.png" alt="Certifications">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;align-items:start;">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon gold">🔍</div>
+        <div><h2>Look Up Certs</h2><p>Enter Student ID</p></div>
+      </div>
+      <div class="card-body">
+        <form onsubmit="viewCerts(event)">
+          <div class="form-group">
+            <label><span class="label-icon">🆔</span> Student ID</label>
+            <input type="number" id="cert_id" placeholder="e.g. 42" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="certBtn">🏅 View Certifications</button>
+        </form>
+        <div class="divider"></div>
+        <div style="background:rgba(245,200,66,0.07);border:1px solid rgba(245,200,66,0.2);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+          <strong style="color:var(--accent-gold);">🏆 Certification Levels</strong><br><br>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:8px;"><span class="result-badge">Bronze</span><span>Beginner completion</span></div>
+            <div style="display:flex;align-items:center;gap:8px;"><span class="result-badge violet">Silver</span><span>Intermediate mastery</span></div>
+            <div style="display:flex;align-items:center;gap:8px;"><span class="result-badge gold">Gold</span><span>Advanced proficiency</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon gold">🏅</div>
+        <div>
+          <h2>Earned Badges</h2>
+          <p id="cert-count">Run a search to view certifications</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="cert-empty" class="empty-state">
+          <div class="empty-icon">🎖️</div>
+          <p>Enter your Student ID to view your earned skill certifications.</p>
+        </div>
+        <ul id="cert_result" class="result-list" style="display:none;"></ul>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>View Certifications</h2>
-
-<form onsubmit="viewCerts(event)">
-
-<label>Student ID</label>
-<input type="number" id="cert_id" required>
-
-<button type="submit">View</button>
-
-</form>
-
-<ul id="cert_result"></ul>
-
-</div>
-
+<div id="toast"></div>
 <script>
+const levelIcons = { Bronze:'🥉', Silver:'🥈', Gold:'🥇' };
+const levelBadge = { Bronze:'', Silver:'violet', Gold:'gold' };
 
-function viewCerts(e)
-{
-e.preventDefault();
+function viewCerts(e) {
+  e.preventDefault();
+  const id = document.getElementById('cert_id').value;
+  const btn = document.getElementById('certBtn');
+  btn.textContent = '⏳ Loading...';
+  btn.disabled = true;
 
-let id = document.getElementById("cert_id").value;
+  fetch(`/certifications/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = '🏅 View Certifications';
+      btn.disabled = false;
+      const list = document.getElementById('cert_result');
+      const empty = document.getElementById('cert-empty');
+      const count = document.getElementById('cert-count');
+      list.innerHTML = '';
 
-fetch(`/certifications/${id}`)
-.then(res => res.json())
-.then(data => {
+      if (!data.length) {
+        empty.style.display = 'block';
+        list.style.display = 'none';
+        count.textContent = 'No certifications found';
+        return;
+      }
 
-let list = document.getElementById("cert_result");
-list.innerHTML = "";
+      empty.style.display = 'none';
+      list.style.display = 'flex';
+      count.textContent = `${data.length} certification${data.length > 1 ? 's' : ''} earned`;
 
-data.forEach(cert => {
-
-let li = document.createElement("li");
-
-li.innerText =
-cert.skill_name +
-" - " +
-cert.certification_level;
-
-list.appendChild(li);
-
-});
-
-});
-
+      data.forEach((cert, i) => {
+        const li = document.createElement('li');
+        li.style.animationDelay = `${i * 0.07}s`;
+        const icon = levelIcons[cert.certification_level] || '🏅';
+        const badge = levelBadge[cert.certification_level] || '';
+        li.innerHTML = `
+          <div class="result-card-icon" style="background:rgba(245,200,66,0.15);">${icon}</div>
+          <div class="result-card-body">
+            <strong>${cert.skill_name}</strong>
+            <span>Issued: ${cert.issue_date}</span>
+          </div>
+          <div class="result-badge ${badge}">${cert.certification_level}</div>
+        `;
+        list.appendChild(li);
+      });
+    })
+    .catch(() => { btn.textContent='🏅 View Certifications'; btn.disabled=false; });
 }
-
 </script>
-
 </body>
 </html>

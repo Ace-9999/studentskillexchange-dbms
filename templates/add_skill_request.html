@@ -1,77 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Add Skill Request</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Request — SkillExchange</title>
+  <meta name="description" content="Submit a new skill learning request and find the right teacher.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page" class="active">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">🎯 Step 1 of your journey</div>
+    <h1>Post a <span>Skill Request</span></h1>
+    <p>Tell the community what you want to learn. Our matching engine will find teachers offering that exact skill at the right price.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/hero_banner.png" alt="Skill Request Illustration">
+  </div>
 </div>
 
+<!-- Stats Strip -->
+<div class="page-content">
+
+  <div class="stats-strip">
+    <div class="stat-card">
+      <div class="stat-icon">🧠</div>
+      <div class="stat-value">500+</div>
+      <div class="stat-label">Skills Available</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👩‍🏫</div>
+      <div class="stat-value">200+</div>
+      <div class="stat-label">Active Teachers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-value">&lt;2 hrs</div>
+      <div class="stat-label">Avg Match Time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏅</div>
+      <div class="stat-value">98%</div>
+      <div class="stat-label">Satisfaction Rate</div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon blue">🎯</div>
+      <div>
+        <h2>New Skill Request</h2>
+        <p>Fill in the details below to post your request</p>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <form action="/add_skill_request" method="POST" id="skillRequestForm">
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label><span class="label-icon">🆔</span> Student ID</label>
+            <input type="number" name="student_id" placeholder="e.g. 42" required>
+          </div>
+          <div class="form-group">
+            <label><span class="label-icon">💡</span> Skill ID</label>
+            <input type="number" name="skill_id" placeholder="e.g. 7" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label><span class="label-icon">📈</span> Desired Level</label>
+            <select name="desired_level">
+              <option value="Beginner">🟢 Beginner</option>
+              <option value="Intermediate">🟡 Intermediate</option>
+              <option value="Advanced">🔴 Advanced</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><span class="label-icon">⏱️</span> Urgency Level</label>
+            <select name="urgency_level">
+              <option value="Low">🌿 Low</option>
+              <option value="Medium">🔶 Medium</option>
+              <option value="High">🚨 High</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><span class="label-icon">🖥️</span> Preferred Learning Mode</label>
+          <select name="preferred_mode">
+            <option value="Online">🌐 Online</option>
+            <option value="Offline">🏫 Offline (In-person)</option>
+            <option value="Hybrid">⚡ Hybrid</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Info tip -->
+        <div style="background:rgba(245,200,0,0.07); border:1px solid rgba(245,200,0,0.20); border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; align-items:flex-start; gap:12px;">
+          <span style="font-size:18px;">💡</span>
+          <div>
+            <strong style="font-size:13px; color:#f5c800;">How it works</strong>
+            <p style="font-size:12.5px; color:var(--text-muted); margin-top:4px; line-height:1.5;">
+              Once submitted, teachers who offer this skill will see your request and can place bids. You can then review and accept the best match.
+            </p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg">
+          🚀 Submit Skill Request
+        </button>
+
+      </form>
+    </div>
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Add Skill Request</h2>
-
-<form action="/add_skill_request" method="POST">
-
-<label>Student ID</label>
-<input type="number" name="student_id" required>
-
-<label>Skill ID</label>
-<input type="number" name="skill_id" required>
-
-<label>Desired Level</label>
-<select name="desired_level">
-<option>Beginner</option>
-<option>Intermediate</option>
-<option>Advanced</option>
-</select>
-
-<label>Urgency Level</label>
-<select name="urgency_level">
-<option>Low</option>
-<option>Medium</option>
-<option>High</option>
-</select>
-
-<label>Preferred Mode</label>
-<select name="preferred_mode">
-<option>Online</option>
-<option>Offline</option>
-<option>Hybrid</option>
-</select>
-
-<button type="submit">Submit</button>
-
-</form>
-
-</div>
-
+<div id="toast"></div>
 </body>
 </html>

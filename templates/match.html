@@ -1,92 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Find Matches</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Skill Matches — SkillExchange</title>
+  <meta name="description" content="Find students who can teach you the skills you want to learn.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page" class="active">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">🤝 Matching Engine</div>
+    <h1>Find Your <span>Perfect Match</span></h1>
+    <p>Enter your Student ID and our engine scans the platform to instantly surface teachers offering exactly the skills you've requested.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/match_banner.png" alt="Match Illustration">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid; grid-template-columns:1fr 2fr; gap:24px; align-items:start;">
+
+    <!-- Search card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon blue">🔍</div>
+        <div>
+          <h2>Search</h2>
+          <p>Enter your ID to find matches</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form onsubmit="findMatches(event)">
+          <div class="form-group">
+            <label><span class="label-icon">🆔</span> Your Student ID</label>
+            <input type="number" id="match_id" placeholder="e.g. 42" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="searchBtn">
+            🔍 Find Matches
+          </button>
+        </form>
+
+        <div class="divider"></div>
+
+        <div style="background:rgba(245,200,0,0.06); border:1px solid rgba(245,200,0,0.15); border-radius:10px; padding:14px; font-size:12.5px; color:var(--text-muted); line-height:1.6;">
+          <strong style="color:#f5c800; display:block; margin-bottom:4px;">⚡ How matching works</strong>
+          We cross-reference your Skill Requests with other students' Skill Offers — same skill, different student.
+        </div>
+      </div>
+    </div>
+
+    <!-- Results card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon cyan">🎯</div>
+        <div>
+          <h2>Matched Teachers</h2>
+          <p id="result-count">Run a search to see results</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-icon">🤖</div>
+          <p>Enter a Student ID and click <strong>Find Matches</strong> to discover available teachers.</p>
+        </div>
+        <ul id="match_result" class="result-list" style="display:none;"></ul>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Find Skill Matches</h2>
-
-<form onsubmit="findMatches(event)">
-
-<label>Student ID</label>
-<input type="number" id="match_id" required>
-
-<button type="submit">Search</button>
-
-</form>
-
-<ul id="match_result"></ul>
-
-</div>
+<div id="toast"></div>
 
 <script>
+function findMatches(e) {
+  e.preventDefault();
+  const id = document.getElementById('match_id').value;
+  const btn = document.getElementById('searchBtn');
+  btn.textContent = '⏳ Searching...';
+  btn.disabled = true;
 
-function findMatches(e)
-{
-e.preventDefault();
+  fetch(`/match/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = '🔍 Find Matches';
+      btn.disabled = false;
 
-let id = document.getElementById("match_id").value;
+      const list = document.getElementById('match_result');
+      const empty = document.getElementById('empty-state');
+      const count = document.getElementById('result-count');
 
-fetch(`/match/${id}`)
-.then(res => res.json())
-.then(data => {
+      list.innerHTML = '';
 
-let list = document.getElementById("match_result");
+      if (!data.length) {
+        empty.style.display = 'block';
+        list.style.display = 'none';
+        count.textContent = 'No matches found';
+        return;
+      }
 
-list.innerHTML = "";
+      empty.style.display = 'none';
+      list.style.display = 'flex';
+      count.textContent = `${data.length} teacher${data.length > 1 ? 's' : ''} found`;
 
-data.forEach(match => {
-
-let li = document.createElement("li");
-
-li.innerText =
-match.name +
-" (" + match.student_id + ") offers " +
-match.skill_name +
-" (" + match.proficiency_level + ")" +
-" - " + match.hourly_points_value + " pts/hr";
-
-list.appendChild(li);
-
-});
-
-});
-
+      data.forEach((match, i) => {
+        const li = document.createElement('li');
+        li.style.animationDelay = `${i * 0.06}s`;
+        li.innerHTML = `
+          <div class="result-card-icon">👨‍🏫</div>
+          <div class="result-card-body">
+            <strong>${match.name} <span style="color:var(--text-muted); font-weight:400;">#${match.student_id}</span></strong>
+            <span>offers <strong style="color:#f5c800;">${match.skill_name}</strong> · ${match.proficiency_level}</span>
+            <span style="font-size:11.5px; color:var(--text-muted); margin-top:2px; display:block;">Request ID: <strong style="color:#ffe566;">#${match.request_id}</strong> &nbsp;·&nbsp; Offer ID: <strong style="color:#f5c800;">#${match.offer_id}</strong></span>
+          </div>
+          <div class="result-badge gold">${match.hourly_points_value} pts/hr</div>
+        `;
+        list.appendChild(li);
+      });
+    })
+    .catch(() => {
+      btn.textContent = '🔍 Find Matches';
+      btn.disabled = false;
+      showToast('❌ Failed to fetch matches', 'error');
+    });
 }
 
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => t.className = '', 3000);
+}
 </script>
-
 </body>
 </html>

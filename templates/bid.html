@@ -1,62 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Place Bid</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Place Bid — SkillExchange</title>
+  <meta name="description" content="Place a skill teaching bid and compete for learning opportunities.">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="navbar">
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page" class="active">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-
-<a href="/">Home</a>
-
-<a href="/add_skill_request_page">Skill Request</a>
-
-<a href="/match_page">Find Matches</a>
-
-<a href="/bid_page">Place Bid</a>
-
-<a href="/session_page">Sessions</a>
-
-<a href="/rating_page">Rate Teacher</a>
-
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/certifications_page">Certifications</a>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">💰 Teacher Bidding</div>
+    <h1>Place Your <span>Teaching Bid</span></h1>
+    <p>As a teacher, propose your hourly points rate on an open skill request. Learners pick the best offer — competitive but fair.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/hero_banner.png" alt="Bidding Illustration">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:start;">
+
+    <!-- Form -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon gold">💰</div>
+        <div><h2>Submit a Bid</h2><p>Propose your teaching rate</p></div>
+      </div>
+      <div class="card-body">
+        <form action="/place_bid" method="POST">
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label><span class="label-icon">📝</span> Request ID</label>
+              <input type="number" name="request_id" placeholder="Skill request to bid on" required>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">👨‍🏫</span> Teacher ID</label>
+              <input type="number" name="teacher_id" placeholder="Your Student ID" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="label-icon">💎</span> Proposed Points (per hour)</label>
+            <input type="number" name="points" placeholder="e.g. 50" required>
+          </div>
+
+          <div class="form-group">
+            <label><span class="label-icon">💬</span> Message to Learner</label>
+            <input type="text" name="message" placeholder="e.g. I have 3 years of experience in this skill...">
+          </div>
+
+          <div class="divider"></div>
+
+          <button type="submit" class="btn btn-violet btn-full btn-lg">
+            💰 Submit Bid
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon violet">💡</div>
+          <div><h2>Bidding Tips</h2></div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:20px;">🎯</span>
+              <div>
+                <strong style="font-size:13px;">Be competitive</strong>
+                <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">Check the Skill Demand page to see current point rates for popular skills.</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:20px;">✍️</span>
+              <div>
+                <strong style="font-size:13px;">Write a good message</strong>
+                <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">Mention your experience, teaching style, or availability. It matters!</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:20px;">⭐</span>
+              <div>
+                <strong style="font-size:13px;">Build your rating</strong>
+                <p style="font-size:12.5px; color:var(--text-muted); margin-top:3px;">Higher-rated teachers win bids more often. Get reviewed after sessions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div style="text-align:center; padding:8px 0;">
+            <div style="font-size:36px; margin-bottom:10px;">📊</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">
+              View the <a href="/demand_page" style="color:#f5c800; text-decoration:none;">Skill Demand</a> page to see what learners need right now and price your bid accordingly.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="form-container">
-
-<h2>Place Bid</h2>
-
-<form action="/place_bid" method="POST">
-
-<label>Request ID</label>
-<input type="number" name="request_id" required>
-
-<label>Teacher ID</label>
-<input type="number" name="teacher_id" required>
-
-<label>Proposed Points</label>
-<input type="number" name="points" required>
-
-<label>Message</label>
-<input type="text" name="message">
-
-<button type="submit">Submit Bid</button>
-
-</form>
-
-</div>
-
+<div id="toast"></div>
 </body>
 </html>

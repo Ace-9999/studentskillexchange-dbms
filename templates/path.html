@@ -1,65 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Skill Path</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Paths — SkillExchange</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a><a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a><a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page">Rate Teacher</a><a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a><a href="/path_page" class="active">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="navbar">
-<div class="logo">Skill Exchange</div>
-
-<div class="nav-links">
-<a href="/">Home</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a>
-<a href="/wallet_page">Wallet</a>
-</div>
-</div>
-
-<div class="form-container">
-
-<h2>Recommended Skills</h2>
-
-<label>Student ID</label>
-<input type="number" id="student_id">
-
-<button onclick="getPaths()">Get Recommendations</button>
-
-<ul id="path_list"></ul>
-
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">🗺️ Learning Roadmap</div>
+    <h1>Your <span>Skill Path</span></h1>
+    <p>Based on your current progress, we recommend skills to learn next. Follow the path to deepen your expertise and unlock new certifications.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/cert_banner.png" alt="Skill Path">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;align-items:start;">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon violet">🔍</div>
+        <div><h2>Get Recommendations</h2><p>Enter your Student ID</p></div>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label><span class="label-icon">🆔</span> Student ID</label>
+          <input type="number" id="student_id" placeholder="e.g. 42">
+        </div>
+        <button onclick="getPaths()" class="btn btn-violet btn-full" id="pathBtn">🗺️ Get My Path</button>
+        <div class="divider"></div>
+        <div style="background:rgba(245,200,0,0.06);border:1px solid rgba(245,200,0,0.20);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+          <strong style="color:#f5c800;">💡 How this works</strong><br>
+          We look at your Skill Progress records and map them to the Skill Path table — showing you logical next skills to learn based on community-curated learning sequences.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon violet">🎯</div>
+        <div>
+          <h2>Recommended Skills</h2>
+          <p id="path-count">Enter your ID to see recommendations</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="path-empty" class="empty-state">
+          <div class="empty-icon">🗺️</div>
+          <p>Enter your Student ID and click <strong>Get My Path</strong> to discover your next learning steps.</p>
+        </div>
+        <div id="path_list" class="path-tags" style="display:none;"></div>
+
+        <div id="path-tip" style="display:none; margin-top: 24px;">
+          <div style="background:rgba(34,211,160,0.07);border:1px solid rgba(34,211,160,0.2);border-radius:10px;padding:16px;font-size:13px;color:var(--text-muted);line-height:1.6;">
+            <strong style="color:var(--success);">✅ What to do next</strong><br>
+            Click <a href="/add_skill_request_page" style="color:#f5c800;text-decoration:none;">Skill Request</a> and post a request for any of these recommended skills. Our matching engine will find teachers for you instantly.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
 <script>
+function getPaths() {
+  const id = document.getElementById('student_id').value;
+  if (!id) return;
+  const btn = document.getElementById('pathBtn');
+  btn.textContent = '⏳ Loading...';
+  btn.disabled = true;
 
-function getPaths(){
+  fetch('/skill_path/' + id)
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = '🗺️ Get My Path';
+      btn.disabled = false;
 
-let id = document.getElementById("student_id").value;
+      const container = document.getElementById('path_list');
+      const empty = document.getElementById('path-empty');
+      const count = document.getElementById('path-count');
+      const tip = document.getElementById('path-tip');
+      container.innerHTML = '';
 
-fetch("/skill_path/" + id)
-.then(res => res.json())
-.then(data => {
+      if (!data.length) {
+        empty.style.display = 'block';
+        container.style.display = 'none';
+        tip.style.display = 'none';
+        count.textContent = 'No recommendations found';
+        return;
+      }
 
-let list = document.getElementById("path_list");
+      empty.style.display = 'none';
+      container.style.display = 'flex';
+      tip.style.display = 'block';
+      count.textContent = `${data.length} skill${data.length > 1 ? 's' : ''} recommended`;
 
-list.innerHTML = "";
-
-data.forEach(skill => {
-
-let li = document.createElement("li");
-
-li.innerText = skill.skill_name;
-
-list.appendChild(li);
-
-});
-
-});
-
+      const icons = ['🚀','💡','⚡','🎯','🔬','🎨','🛠️','📐','🧠','🌐'];
+      data.forEach((skill, i) => {
+        const tag = document.createElement('div');
+        tag.className = 'path-tag';
+        tag.style.animationDelay = `${i * 0.07}s`;
+        tag.innerHTML = `
+          ${icons[i % icons.length]} ${skill.skill_name}
+          <span style="margin-left:8px; font-size:11px; font-weight:600; background:rgba(245,200,0,0.15); color:#f5c800; border-radius:6px; padding:2px 7px;">ID #${skill.skill_id}</span>
+        `;
+        container.appendChild(tag);
+      });
+    })
+    .catch(() => { btn.textContent = '🗺️ Get My Path'; btn.disabled = false; });
 }
-
 </script>
-
 </body>
 </html>

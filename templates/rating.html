@@ -1,55 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Rate Teacher</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Teacher — SkillExchange</title>
+  <meta name="description" content="Leave a rating and review for your skill teacher.">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* Reverse-order star trick for CSS-only highlight */
+    .star-rating { flex-direction: row-reverse; justify-content: flex-end; }
+    .star-rating input:checked ~ label { color: var(--accent-gold); }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label { color: var(--accent-gold); }
+  </style>
 </head>
-
 <body>
 
-<div class="navbar">
-<div class="logo">Skill Exchange</div>
+<nav class="navbar">
+  <div class="logo"><div class="logo-icon">⚡</div>SkillExchange</div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/add_skill_request_page">Skill Request</a>
+    <a href="/match_page">Find Matches</a>
+    <a href="/add_collab_page">Collaborate</a>
+    <a href="/bid_page">Place Bid</a>
+    <a href="/rating_page" class="active">Rate Teacher</a>
+    <a href="/wallet_page">Wallet</a>
+    <a href="/demand_page">Skill Demand</a>
+    <a href="/path_page">Skill Paths</a>
+    <a href="/certifications_page">Certifications</a>
+  </div>
+</nav>
 
-<div class="nav-links">
-<a href="/">Home</a>
-<a href="/add_skill_request_page">Skill Request</a>
-<a href="/match_page">Find Matches</a>
-<a href="/bid_page">Place Bid</a>
-<a href="/wallet_page">Wallet</a>
-<a href="/demand_page">Skill Demand</a>
-<a href="/path_page">Skill Paths</a><a href="/certifications_page">Certifications</a>
-</div>
-</div>
-
-<div class="form-container">
-
-<h2>Rate Teacher</h2>
-
-<form action="/rate_teacher" method="POST">
-
-<label>Session ID</label>
-<input type="number" name="session_id" required>
-
-<label>Reviewer ID</label>
-<input type="number" name="reviewer_id" required>
-
-<label>Rating</label>
-<select name="rating">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-</select>
-
-<label>Review</label>
-<input type="text" name="review">
-
-<button type="submit">Submit Rating</button>
-
-</form>
-
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-text">
+    <div class="tag">⭐ Post-Session Review</div>
+    <h1>Rate Your <span>Teacher</span></h1>
+    <p>Your honest feedback helps teachers improve and helps learners make better choices. Every review strengthens the community.</p>
+  </div>
+  <div class="page-header-image">
+    <img src="/static/cert_banner.png" alt="Rating Illustration">
+  </div>
 </div>
 
+<div class="page-content">
+  <div style="display:grid; grid-template-columns:1.6fr 1fr; gap:24px; align-items:start;">
+
+    <!-- Form -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-header-icon gold">⭐</div>
+        <div><h2>Submit Rating</h2><p>Rate your learning experience</p></div>
+      </div>
+      <div class="card-body">
+        <form action="/rate_teacher" method="POST">
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label><span class="label-icon">📅</span> Session ID</label>
+              <input type="number" name="session_id" placeholder="From your completed session" required>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🆔</span> Your ID (Reviewer)</label>
+              <input type="number" name="reviewer_id" placeholder="Your Student ID" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><span class="label-icon">⭐</span> Rating</label>
+            <!-- Visual star display (clicks select the hidden select) -->
+            <div style="display:flex; gap:8px; margin-bottom:12px;" id="starDisplay">
+              <span class="star-vis" data-val="1" style="font-size:32px; cursor:pointer; transition:0.2s;">☆</span>
+              <span class="star-vis" data-val="2" style="font-size:32px; cursor:pointer; transition:0.2s;">☆</span>
+              <span class="star-vis" data-val="3" style="font-size:32px; cursor:pointer; transition:0.2s;">☆</span>
+              <span class="star-vis" data-val="4" style="font-size:32px; cursor:pointer; transition:0.2s;">☆</span>
+              <span class="star-vis" data-val="5" style="font-size:32px; cursor:pointer; transition:0.2s;">☆</span>
+            </div>
+            <select name="rating" id="ratingSelect" style="display:none;">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <p id="ratingLabel" style="font-size:13px; color:var(--text-muted);">Click to select your rating</p>
+          </div>
+
+          <div class="form-group">
+            <label><span class="label-icon">💬</span> Written Review</label>
+            <textarea name="review" placeholder="Share details about your experience — what did they teach well? What could improve?" rows="4"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg">
+            ⭐ Submit Rating
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Guidelines -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon blue">📜</div>
+          <div><h2>Review Guidelines</h2></div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:12px;"><span style="font-size:18px;">✅</span><p style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">Be honest and constructive — focus on the teaching quality.</p></div>
+            <div style="display:flex; gap:12px;"><span style="font-size:18px;">✅</span><p style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">Rate based on clarity, patience, and depth of knowledge.</p></div>
+            <div style="display:flex; gap:12px;"><span style="font-size:18px;">✅</span><p style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">Mention specific things you learned or liked.</p></div>
+            <div style="display:flex; gap:12px;"><span style="font-size:18px;">❌</span><p style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">Avoid personal criticism unrelated to teaching.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body" style="text-align:center; padding:28px;">
+          <div style="font-size:40px; margin-bottom:12px;">🏅</div>
+          <p style="font-size:13px; color:var(--text-muted); line-height:1.6;">Teachers with 5+ reviews get a <strong style="color:var(--accent-gold);">Top Teacher</strong> badge — boosting their visibility on the platform.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const ratingLabels = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent!'];
+  const stars = document.querySelectorAll('.star-vis');
+  const select = document.getElementById('ratingSelect');
+  const label = document.getElementById('ratingLabel');
+
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => highlightStars(s.dataset.val));
+    s.addEventListener('mouseleave', () => highlightStars(select.value || 0));
+    s.addEventListener('click', () => {
+      select.value = s.dataset.val;
+      label.textContent = ratingLabels[s.dataset.val] + ' — ' + s.dataset.val + '/5';
+      label.style.color = 'var(--accent-gold)';
+      highlightStars(s.dataset.val);
+    });
+  });
+
+  function highlightStars(val) {
+    stars.forEach(s => {
+      s.textContent = parseInt(s.dataset.val) <= parseInt(val) ? '★' : '☆';
+      s.style.color = parseInt(s.dataset.val) <= parseInt(val) ? 'var(--accent-gold)' : 'rgba(255,255,255,0.2)';
+    });
+  }
+</script>
 </body>
 </html>
